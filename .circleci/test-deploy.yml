@@ -25,6 +25,8 @@ workflows:
           filters: *filters
       - orb-tools/pack:
           filters: *filters
+      - sample/bump-version-and-upload-artifact:
+          filters: *filters
       - orb-tools/publish:
           orb-name: mlkmahmud/sample
           vcs-type: << pipeline.project.type >>
