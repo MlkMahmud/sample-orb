@@ -21,9 +21,11 @@ bump_type=$(get_bump_type)
 if [[ -n "$bump_type" ]]; then
   npm version "$bump_type" -m "[skip ci] Upgrade to %s"
   git push && git push --tags
-  echo _auth="$NPM_REGISTRY_AUTH" >> .npmrc
-  echo email="$NPM_REGISTRY_EMAIL" >> .npmrc
-  echo registry="$NPM_REGISTRY" >> .npmrc
+  {
+    echo _auth="$NPM_REGISTRY_AUTH"
+    echo email="$NPM_REGISTRY_EMAIL"
+    echo registry="$NPM_REGISTRY"
+  } >> .npmrc
   npm shrinkwrap
   npm ci
   npm publish
