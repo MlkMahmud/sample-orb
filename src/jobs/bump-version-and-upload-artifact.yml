@@ -1,0 +1,36 @@
+description: >
+  This job bumps the version of your Node project and uploads a build artifact to your desired NPM registry.
+
+parameters:
+  version:
+    type: string
+    default: "lts"
+    description: >
+      Pick a specific cimg/node image version tag: https://hub.docker.com/r/cimg/node. Defaults to current LTS.
+
+executor:
+  name: default
+  parameters:
+    tag: << parameters.version >>
+
+steps:
+  - checkout
+  - run:
+      name: Check files
+      command: ls -al
+  - run:
+      name: Check version to publish
+      command: npm pkg get version
+  - run:
+      name: Configure git username and email
+      command: |
+        git config user.name << paramaters.git_user_name >>
+        git config user.email << paramaters.git_user_email >>
+  - run:
+      name: Bump project version and upload artifact
+      environment:
+        NPM_REGISTRY: << parameters.npm_registry >>
+        NPM_REGISTRY_AUTH: << parameters.npm_registry_auth >>
+        NPM_REGISTRY_EMAIL: << parameters.npm_registry_email >>
+      command: <<include(scripts/bump-version-and-upload-artifact.sh)>>
+
