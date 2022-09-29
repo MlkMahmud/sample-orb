@@ -1,8 +1,35 @@
 description: >
-  This job bumps the version of your Node project and uploads a build artifact to your desired NPM registry.
+  This job bumps the version of your Node project and uploads a build artifact to your specified NPM registry.
 
 parameters:
-  version:
+  git_user_email:
+    type: string
+    default: "not@an.email"
+    description: >
+      The email for the git account that performs the commit and tags from bumping version.
+
+  git_user_name:
+    type: string
+    default: "circleci"
+    description: >
+      The username for the git account that performs the commit and tags from bumping version.
+  
+  npm_registry:
+    type: string
+    description: >
+      The NPM registry to upload your build artifact to.
+
+  npm_registry_auth:
+    type: string
+    description: >
+      The authentication token for the specified NPM registry account 
+  
+  npm_registry_email:
+    type: string
+    description: >
+      The email address for the specified NPM registry account.
+
+  node_version:
     type: string
     default: "lts"
     description: >
@@ -11,7 +38,7 @@ parameters:
 executor:
   name: default
   parameters:
-    tag: << parameters.version >>
+    tag: << parameters.node_version >>
 
 steps:
   - checkout
@@ -23,9 +50,10 @@ steps:
       command: npm pkg get version
   - run:
       name: Configure git username and email
-      command: |
-        git config user.name << paramaters.git_user_name >>
-        git config user.email << paramaters.git_user_email >>
+      environment:
+        GIT_USER_EMAIL: << paramaters.git_user_email >>
+        GIT_USER_NAME: << paramaters.git_user_name >>
+      command: <<include(scripts/configure-git.sh)>>
   - run:
       name: Bump project version and upload artifact
       environment:
