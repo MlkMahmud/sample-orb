@@ -13,7 +13,7 @@ parameters:
     default: "circleci"
     description: >
       The username for the git account that performs the commit and tags from bumping version.
-  
+
   npm_registry:
     type: string
     description: >
@@ -22,8 +22,8 @@ parameters:
   npm_registry_auth:
     type: string
     description: >
-      The authentication token for the specified NPM registry account 
-  
+      The authentication token for the specified NPM registry account
+
   npm_registry_email:
     type: string
     description: >
@@ -61,4 +61,3 @@ steps:
         NPM_REGISTRY_AUTH: << parameters.npm_registry_auth >>
         NPM_REGISTRY_EMAIL: << parameters.npm_registry_email >>
       command: <<include(scripts/bump-version-and-upload-artifact.sh)>>
-
